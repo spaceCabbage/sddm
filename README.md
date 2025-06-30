@@ -8,6 +8,10 @@
       <img src="./preview.jpg" width="400">
       <img src="./preview-lynx.jpg" width="400">
   </div>
+  <div>
+      <img src="./preview-wallpaper.jpg" width="400">
+      <img src="./preview-lynx-wallpaper.jpg" width="400">
+  </div>
 </div>
 
 # Install
