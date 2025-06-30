@@ -12,7 +12,7 @@ def valid_file(path):
         raise argparse.ArgumentTypeError(f"{path} is not a valid file")
     return os.path.abspath(path)
 
-parser.add_argument('--scheme', choices=['panther', 'tiger'], default='panther', help="Base theme (default: panther)")
+parser.add_argument('--scheme', choices=['panther', 'lynx'], default='panther', help="Base theme (default: panther)")
 parser.add_argument('--accent', choices=['red', 'orange', 'yellow', 'green', 'neon-green', 'cyan', 'blue', 'purple', 'pink'], default="yellow", help="Accent color (default: yellow)")
 parser.add_argument('--wallpaper', type=valid_file, help="Path to wallpaper image", default=None)
 
@@ -40,7 +40,7 @@ if args.scheme == "panther":
     if args.accent == "pink":
         accent_color = "#FF72F6"
 
-if args.scheme == "tiger":
+if args.scheme == "lynx":
     if args.accent == "red":
         accent_color = "#9A0000"
     if args.accent == "orange":
