@@ -69,14 +69,20 @@ with open(conf_path, 'r') as f:
 
 content = content.replace('accentColor=', f'accentColor="{accent_color}"')
 
+subprocess.run("sudo rm -rf /usr/share/sddm/themes/monocode/", shell=True)
+subprocess.run("sudo mkdir /usr/share/sddm/themes/monocode/", shell=True)
+
 if args.wallpaper:
-    content = content.replace("background=", f"background={args.wallpaper}")
+    extension = Path(args.wallpaper).suffix
+    content = content.replace("background=", f"background=/usr/share/sddm/themes/monocode/wallpaper{extension}")
+    result = subprocess.run(f"sudo cp '{args.wallpaper}' /usr/share/sddm/themes/monocode/wallpaper{extension}", shell=True, check=True)
+    print(result.stdout)
+    print(result.stderr)
 
 with open(user_conf_path, 'w') as f:
     f.write(content)
 
-subprocess.run("sudo rm -rf /usr/share/sddm/themes/monocode/", shell=True)
-subprocess.run(f"sudo cp -r {src_dir} /usr/share/sddm/themes/monocode/", shell=True)
+subprocess.run(f"sudo cp -r {src_dir}/* /usr/share/sddm/themes/monocode/", shell=True)
 
 print("✅ Installed Successfully")
 print("To use the theme add the following in /etc/sddm.conf\n")
