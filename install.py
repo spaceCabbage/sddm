@@ -45,7 +45,6 @@ class LynxAccentColor(Enum):
 def get_accent_color(scheme: str, accent: str) -> str:
     try:
         if scheme == "panther":
-            print(PantherAccentColor[accent.upper().replace("-", "_")].value)
             return PantherAccentColor[accent.upper().replace("-", "_")].value
         elif scheme == "lynx":
             return LynxAccentColor[accent.upper().replace("-", "_")].value
