@@ -14,10 +14,17 @@ Item {
     }
 
     Image {
+        id: backgroundImage
         anchors.fill: parent
-        source: config.background
         fillMode: Image.PreserveAspectCrop
-        visible: config.background !== ""
+        visible: false
+
+        Component.onCompleted: {
+            if (typeof config.background === "string" && config.background !== "") {
+                backgroundImage.source = config.background;
+                backgroundImage.visible = true;
+            }
+        }
     }
 
     Rectangle {
@@ -63,7 +70,7 @@ Item {
                         color: config.secondaryTextColor
                         background: null
 
-                        Keys.onPressed: {
+                        Keys.onPressed: function (event) {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                                 event.accepted = true;
