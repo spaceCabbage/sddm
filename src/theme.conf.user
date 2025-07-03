@@ -6,11 +6,11 @@ borderColor="#383838"
 buttonColor="#1F1F1F"
 textColor="#F2F2F2"
 secondaryTextColor="#E5E5E5"
-accentColor="#FFDE72"
+accentColor="#FF7272"
 onAccentColor="#000000"
 
 # Wallpaper
-background=/usr/share/sddm/themes/monocode/wallpaper.jpg
+background=
 
 # Icons
 eyePath="./assets/eye.png"
