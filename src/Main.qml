@@ -152,6 +152,7 @@ Item {
                 height: 48
                 color: config.accentColor
                 radius: 24
+                opacity: loginMouseArea.containsMouse ? 0.9 : 1
 
                 Text {
                     id: lblLogin
@@ -162,9 +163,11 @@ Item {
                 }
 
                 MouseArea {
-                    id: mouseArea
+                    id: loginMouseArea
                     hoverEnabled: true
                     anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+
                     onClicked: {
                         sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                     }
@@ -202,13 +205,29 @@ Item {
                         currentIndex: sessionModel.lastIndex
 
                         KeyNavigation.backtab: loginButton
-                        KeyNavigation.tab: usernameField
+                        KeyNavigation.tab: restartButton
 
                         background: Rectangle {
                             radius: 24
                             border.width: 2
-                            border.color: config.borderColor
+                            border.color: sessionMouseArea.containsMouse ? config.accentColor : config.borderColor
                             color: config.buttonColor
+
+                            MouseArea {
+                                id: sessionMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                propagateComposedEvents: false
+                                onClicked: {
+                                    mouse.accepted = false;
+                                    if (session.popup.opened) {
+                                        session.popup.close();
+                                    } else {
+                                        session.popup.open();
+                                    }
+                                }
+                            }
                         }
 
                         contentItem: Text {
@@ -255,6 +274,18 @@ Item {
                             background: Rectangle {
                                 color: highlighted ? config.borderColor : "transparent"
                                 radius: 8
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    propagateComposedEvents: true
+                                    onClicked: {
+                                        mouse.acepted = false;
+                                        session.currentIndex = index;
+                                        session.popup.close();
+                                    }
+                                }
                             }
                         }
                     }
@@ -265,11 +296,10 @@ Item {
                     height: 48
                     color: config.buttonColor
                     border.width: 2
-                    border.color: config.borderColor
+                    border.color: (restartButton.containsMouse || restartButton.activeFocus) ? config.accentColor : config.borderColor
                     radius: 24
 
                     Image {
-                        id: restartImage
                         anchors.centerIn: parent
                         source: config.restartPath
                         width: 32
@@ -277,8 +307,11 @@ Item {
                     }
 
                     MouseArea {
+                        id: restartButton
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+                        activeFocusOnTab: true
                         onClicked: {
                             sddm.reboot();
                         }
@@ -290,7 +323,7 @@ Item {
                     height: 48
                     color: config.buttonColor
                     border.width: 2
-                    border.color: config.borderColor
+                    border.color: (powerButton.containsMouse || powerButton.activeFocus) ? config.accentColor : config.borderColor
                     radius: 24
 
                     Image {
@@ -304,11 +337,13 @@ Item {
                         id: powerButton
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+                        activeFocusOnTab: true
                         onClicked: {
                             sddm.poweroff();
                         }
 
-                        KeyNavigation.backtab: loginButton
+                        KeyNavigation.backtab: restartButton
                         KeyNavigation.tab: usernameField
                     }
                 }
