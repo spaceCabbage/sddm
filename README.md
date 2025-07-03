@@ -26,6 +26,11 @@ cd sddm
 python install.py
 ```
 
+If you are on Arch Linux you might need the `qt5-quickcontrols2` package.
+```sh
+sudo pacman -S qt5-quickcontrols2
+```
+
 If you skip the step to manually change the sddm.conf you can go to `/etc/sddm.conf` and add/change the config file.
 ```conf
 [Theme]

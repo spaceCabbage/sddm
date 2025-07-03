@@ -2,9 +2,6 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 
-// Dependencies:
-// qt5-quickcontrols2
-
 Item {
     property bool showPassword: false
 
