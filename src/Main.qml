@@ -6,7 +6,7 @@ import QtQuick.Controls 2.15
 // qt5-quickcontrols2
 
 Item {
-    property var sessionIndex: sessionBox.currentIndex
+    property bool showPassword: false
 
     Rectangle {
         color: config.backgroundColor
@@ -65,7 +65,7 @@ Item {
 
                         Keys.onPressed: {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                sddm.login(usernameField.text, passwordField.text, sessionIndex);
+                                sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                                 event.accepted = true;
                             }
                         }
@@ -77,7 +77,6 @@ Item {
             }
 
             Column {
-                property bool showPassword: false
 
                 width: parent.width
 
@@ -112,7 +111,7 @@ Item {
 
                         Keys.onPressed: {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                sddm.login(usernameField.text, passwordField.text, sessionIndex);
+                                sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                                 event.accepted = true;
                             }
                         }
@@ -159,12 +158,11 @@ Item {
                     id: mouseArea
                     hoverEnabled: true
                     anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        sddm.login(usernameField.text, passwordField.text, sessionIndex);
-					}
+                        sddm.login(usernameField.text, passwordField.text, session.currentIndex);
+                    }
 
-					KeyNavigation.backtab: usernameField
+                    KeyNavigation.backtab: usernameField
                     KeyNavigation.tab: session
                 }
             }
@@ -196,8 +194,8 @@ Item {
                         textRole: "name"
                         currentIndex: sessionModel.lastIndex
 
-                        KeyNavigation.backtab: password
-                        KeyNavigation.tab: layoutBox
+                        KeyNavigation.backtab: loginButton
+                        KeyNavigation.tab: usernameField
 
                         background: Rectangle {
                             radius: 24
@@ -301,10 +299,10 @@ Item {
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             sddm.poweroff();
-						}
+                        }
 
-						KeyNavigation.backtab: loginButton
-                    	KeyNavigation.tab: usernameField
+                        KeyNavigation.backtab: loginButton
+                        KeyNavigation.tab: usernameField
                     }
                 }
             }
