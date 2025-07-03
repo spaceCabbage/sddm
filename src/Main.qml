@@ -1,14 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import "components"
 
 // Dependencies:
 // qt5-quickcontrols2
 
-Rectangle {
-    property var username: usernameField.text
-    property var password: passwordField.text
+Item {
     property var sessionIndex: sessionBox.currentIndex
 
     Rectangle {
@@ -26,7 +23,7 @@ Rectangle {
     Rectangle {
         anchors.centerIn: parent
         width: 600
-        height: 324
+        height: 24 + 16 + 48 + 16 + 16 + 48 + 16 + 48 + 16 + 48 + 24 + 16
         color: config.boxColor
         border.width: 2
         border.color: config.borderColor
@@ -37,28 +34,287 @@ Rectangle {
             anchors.margins: 24
             spacing: 16
 
-            UsernameField {
-                id: usernameField
+            Column {
+                width: parent.width
+
+                Text {
+                    id: lblUsername
+                    text: qsTr("Username")
+                    color: config.textColor
+                    font.pixelSize: 16
+                    font.weight: Font.Medium
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 48
+                    radius: 8
+                    color: config.buttonColor
+                    border.width: 2
+                    border.color: usernameField.focus ? config.accentColor : config.borderColor
+
+                    TextField {
+                        id: usernameField
+                        text: userModel.lastUser
+                        anchors.fill: parent
+                        font.pixelSize: 16
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
+                        color: config.secondaryTextColor
+                        background: null
+
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                sddm.login(usernameField.text, passwordField.text, sessionIndex);
+                                event.accepted = true;
+                            }
+                        }
+
+                        KeyNavigation.backtab: session
+                        KeyNavigation.tab: passwordField
+                    }
+                }
             }
 
-            PasswordField {
-                id: passwordField
+            Column {
+                property bool showPassword: false
+
+                width: parent.width
+
+                Text {
+                    id: lblPassword
+                    text: qsTr("Password")
+                    color: config.textColor
+                    font.pixelSize: 16
+                    font.weight: Font.Medium
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 48
+                    radius: 8
+                    color: config.buttonColor
+                    border.width: 2
+                    border.color: passwordField.focus ? config.accentColor : config.borderColor
+
+                    TextField {
+                        id: passwordField
+                        anchors.left: parent.left
+                        anchors.leftMargin: 8
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: eyeIcon.left
+                        anchors.rightMargin: 16
+                        font.pixelSize: 16
+                        color: config.secondaryTextColor
+                        echoMode: showPassword ? TextInput.Normal : TextInput.Password
+                        background: null
+
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                sddm.login(usernameField.text, passwordField.text, sessionIndex);
+                                event.accepted = true;
+                            }
+                        }
+
+                        KeyNavigation.backtab: usernameField
+                        KeyNavigation.tab: loginButton
+                    }
+
+                    Image {
+                        id: eyeIcon
+                        width: 24
+                        height: 24
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        source: showPassword ? config.eyePath : config.eyeSlashPath
+                        fillMode: Image.PreserveAspectFit
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: showPassword = !showPassword
+                        }
+                    }
+                }
             }
 
-            LoginButton {}
+            Rectangle {
+                id: loginButton
+                width: parent.width
+                height: 48
+                color: config.accentColor
+                radius: 24
+
+                Text {
+                    id: lblLogin
+                    anchors.centerIn: parent
+                    text: qsTr("Login")
+                    color: config.onAccentColor
+                    font.pixelSize: 16
+                }
+
+                MouseArea {
+                    id: mouseArea
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        sddm.login(usernameField.text, passwordField.text, sessionIndex);
+					}
+
+					KeyNavigation.backtab: usernameField
+                    KeyNavigation.tab: session
+                }
+            }
 
             Row {
                 width: parent.width
-                anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 8
 
-                SessionComboBox {
-                    id: sessionBox
+                Column {
+                    width: 600 - 24 * 2 - 8 * 2 - 48 * 2
+                    spacing: 4
+                    anchors.bottom: parent.bottom
+
+                    ComboBox {
+                        id: session
+                        width: parent.width
+                        height: 48
+                        font.pixelSize: 14
+
+                        indicator: Image {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.right: parent.right
+                            anchors.rightMargin: 8
+                            width: 24
+                            height: 24
+                            source: config.chevronDownPath
+                        }
+                        model: sessionModel
+                        textRole: "name"
+                        currentIndex: sessionModel.lastIndex
+
+                        KeyNavigation.backtab: password
+                        KeyNavigation.tab: layoutBox
+
+                        background: Rectangle {
+                            radius: 24
+                            border.width: 2
+                            border.color: config.borderColor
+                            color: config.buttonColor
+                        }
+
+                        contentItem: Text {
+                            text: session.displayText
+                            color: config.textColor
+                            font.pixelSize: 16
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            anchors.fill: parent
+                            anchors.leftMargin: 16
+                        }
+
+                        popup: Popup {
+                            y: session.height
+                            width: session.width
+                            implicitHeight: contentItem.implicitHeight
+                            padding: 0
+
+                            contentItem: ListView {
+                                implicitHeight: contentHeight
+                                model: session.popup.visible ? session.delegateModel : null
+                                delegate: session.delegate
+                                currentIndex: session.highlightedIndex
+                            }
+
+                            background: Rectangle {
+                                radius: 8
+                                border.width: 2
+                                border.color: config.borderColor
+                                color: config.buttonColor
+                            }
+                        }
+
+                        delegate: ItemDelegate {
+                            width: session.width
+                            highlighted: session.highlightedIndex === index
+                            contentItem: Text {
+                                text: model.name
+                                color: config.textColor
+                                font.pixelSize: 16
+                                elide: Text.ElideRight
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            background: Rectangle {
+                                color: highlighted ? config.borderColor : "transparent"
+                                radius: 8
+                            }
+                        }
+                    }
                 }
 
-                RestartButton {}
-                PowerButton {}
+                Rectangle {
+                    width: 48
+                    height: 48
+                    color: config.buttonColor
+                    border.width: 2
+                    border.color: config.borderColor
+                    radius: 24
+
+                    Image {
+                        id: restartImage
+                        anchors.centerIn: parent
+                        source: config.restartPath
+                        width: 32
+                        height: 32
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            sddm.reboot();
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: 48
+                    height: 48
+                    color: config.buttonColor
+                    border.width: 2
+                    border.color: config.borderColor
+                    radius: 24
+
+                    Image {
+                        anchors.centerIn: parent
+                        source: config.shutdownPath
+                        width: 32
+                        height: 32
+                    }
+
+                    MouseArea {
+                        id: powerButton
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            sddm.poweroff();
+						}
+
+						KeyNavigation.backtab: loginButton
+                    	KeyNavigation.tab: usernameField
+                    }
+                }
             }
         }
+    }
+
+    Component.onCompleted: {
+        if (usernameField.text == "")
+            usernameField.focus = true;
+        else
+            passwordField.focus = true;
     }
 }
