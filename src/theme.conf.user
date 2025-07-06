@@ -10,7 +10,7 @@ accentColor="#FFDE72"
 onAccentColor="#000000"
 
 # Wallpaper
-background=
+background=/usr/share/sddm/themes/monocode/wallpaper.jpg
 
 # Icons
 eyePath="./assets/eye.png"
