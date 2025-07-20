@@ -8,6 +8,7 @@ textColor="#F2F2F2"
 secondaryTextColor="#E5E5E5"
 accentColor="#FFDE72"
 onAccentColor="#000000"
+dangerColor="#FF7272"
 
 # Wallpaper
 background=/usr/share/sddm/themes/monocode/wallpaper.jpg
