@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 
 Item {
     property bool showPassword: false
+    property bool loginFailed: false
 
     Rectangle {
         color: config.backgroundColor
@@ -27,11 +28,19 @@ Item {
     Rectangle {
         anchors.centerIn: parent
         width: 600
-        height: 24 + 16 + 48 + 16 + 16 + 48 + 16 + 48 + 16 + 48 + 24 + 16
+        height: 24 + 16 + 48 + 16 + 16 + 48 + 16 + 48 + 16 + 48 + 24 + 16 + ((loginFailed) ? 24 : 0)
         color: config.boxColor
         border.width: 2
         border.color: config.borderColor
         radius: 16
+
+        Connections {
+            target: sddm
+
+            onLoginFailed: {
+                loginFailed = true;
+            }
+        }
 
         Column {
             anchors.fill: parent
@@ -69,6 +78,7 @@ Item {
 
                         Keys.onPressed: function (event) {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                loginFailed = false;
                                 sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                                 event.accepted = true;
                             }
@@ -115,6 +125,7 @@ Item {
 
                         Keys.onPressed: function (event) {
                             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                loginFailed = false;
                                 sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                                 event.accepted = true;
                             }
@@ -166,6 +177,7 @@ Item {
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
+                        loginFailed = false;
                         sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                     }
 
@@ -344,6 +356,18 @@ Item {
                         KeyNavigation.tab: usernameField
                     }
                 }
+            }
+
+            Text {
+                id: loginFailedText
+                visible: loginFailed
+                width: parent.width
+                text: qsTr("Login Failed")
+                color: config.dangerColor
+                font.pixelSize: 16
+                font.weight: Font.Medium
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
         }
     }
