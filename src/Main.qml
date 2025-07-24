@@ -177,6 +177,7 @@ Item {
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
+                        console.log("clcik");
                         loginFailed = false;
                         sddm.login(usernameField.text, passwordField.text, session.currentIndex);
                     }
