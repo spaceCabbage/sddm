@@ -349,7 +349,7 @@ Item {
                         hoverEnabled: true
                         activeFocusOnTab: true
                         onClicked: {
-                            sddm.poweroff();
+                            sddm.powerOff();
                         }
 
                         KeyNavigation.backtab: restartButton
