@@ -11,7 +11,7 @@ onAccentColor="#000000"
 dangerColor="#B11E3A"
 
 # Wallpaper
-background=/usr/share/sddm/themes/monocode/wallpaper.png
+background=/usr/share/sddm/themes/nsa/wallpaper.png
 
 # Icons
 eyePath="./assets/eye.png"
