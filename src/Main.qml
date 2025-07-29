@@ -26,7 +26,9 @@ Item {
     }
 
     Rectangle {
-        anchors.centerIn: parent
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 100
         width: 600
         height: 24 + 16 + 48 + 16 + 16 + 48 + 16 + 48 + 16 + 48 + 24 + 16 + ((loginFailed) ? 24 : 0)
         color: config.boxColor
