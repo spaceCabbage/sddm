@@ -2,7 +2,7 @@
 
 A sleek, modern SDDM (Simple Desktop Display Manager) theme with a NSA-inspired aesthetics.
 
-![Preview](preview.png)
+![Preview](src/preview.png)
 
 ## Requirements
 
